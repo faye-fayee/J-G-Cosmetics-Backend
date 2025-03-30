@@ -1,16 +1,19 @@
 package com.jgcosmetics.store.controller;
 
 import com.jgcosmetics.store.model.Cart;
+import com.jgcosmetics.store.model.Product;
 import com.jgcosmetics.store.model.User;
 import com.jgcosmetics.store.service.CartService;
 import com.jgcosmetics.store.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
-@Service
+@RestController
 @RequestMapping("/api/cart")
 @CrossOrigin(origins = "*")
 public class CartController {
@@ -36,30 +39,72 @@ public class CartController {
 
     // Add items to cart
     @PostMapping("/add")
-    public String addCart(@RequestParam(required = false) Integer userId,
-                          @RequestParam int productId,
-                          @RequestParam int quantity,
-                          @RequestParam(required = false) String sessionId) {
-        User user = null;
-        if (userId != null) {
-            user = userService.findByUsername(String.valueOf(userId)).orElse(null);
-            if (user == null) {
-                return "Error: User not found with id " + userId;
-            }
-        }
+    public ResponseEntity<?> addCart(@RequestBody Map<String, Object> payload) {
         try {
+            Integer userId = payload.get("userId") != null ? ((Number) payload.get("userId")).intValue() : null;
+            Long productId = payload.get("productId") != null ? ((Number) payload.get("productId")).longValue() : null;
+            int quantity = payload.get("quantity") != null ? ((Number) payload.get("quantity")).intValue() : 0;
+            String sessionId = payload.get("sessionId") != null ? (String) payload.get("sessionId") : null;
+
+            // Validate required fields
+            if (productId == null || quantity <= 0 || sessionId == null) {
+                return ResponseEntity.badRequest().body("Error: Invalid data provided");
+            }
+
+            // Find user if userId is provided
+            User user = null;
+            if (userId != null) {
+                user = userService.findById(userId).orElse(null);
+                if (user == null) {
+                    return ResponseEntity.badRequest().body("Error: User not found with id " + userId);
+                }
+            }
+
+            // Add or update cart
             cartService.addToCart(user, productId, quantity, sessionId);
-            return "Added cart successfully";
+            return ResponseEntity.ok("Added to cart successfully");
+
         } catch (Exception e) {
-            return "Error adding item to cart: " + e.getMessage();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding item to cart: " + e.getMessage());
         }
     }
 
     // Delete item from cart
-    @DeleteMapping("/remover/{cardId}")
-    public String removeFromCart(@RequestParam int cartId) {
+    @DeleteMapping("/remove/cart-id/{cartId}")
+    public String removeFromCart(@PathVariable int cartId) {
         cartService.removeFromCart(cartId);
-        return "Removed cart successfully";
+        return "Removed items from cart successfully";
+    }
+
+    // Delete items from cart by product ID
+    @DeleteMapping("/remove/cart-item")
+    public ResponseEntity<?> removeFromCart(@RequestBody Map<String, Object> payload) {
+        try {
+            Integer userId = payload.get("userId") != null ? ((Number) payload.get("userId")).intValue() : null;
+            String sessionId = payload.get("sessionId") != null ? (String) payload.get("sessionId") : null;
+            Integer productId = payload.get("productId") != null ? ((Number) payload.get("productId")).intValue() : null;
+
+            // Validate required fields
+            if (productId == null) {
+                return ResponseEntity.badRequest().body("Error: productId is required.");
+            }
+
+            // Check if userId is provided (logged-in user)
+            if (userId != null) {
+                cartService.removeFromCartByUserAndProduct(userId, productId);
+                return ResponseEntity.ok("Item removed from cart successfully for user" + userId);
+            }
+
+            // Check if sessionId is provided (guest user)
+            if (sessionId != null) {
+                cartService.removeFromCartBySessionAndProduct(sessionId, productId);
+                return ResponseEntity.ok("Item removed from cart successfully for guest.");
+            }
+
+            return ResponseEntity.badRequest().body("Error: Either userId or sessionId is required.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error removing item from cart: " + e.getMessage());
+        }
     }
 
     // Clear cart for logged-in user
@@ -67,11 +112,12 @@ public class CartController {
     public String clearCartByUser(@PathVariable int userId) {
         User user = new User();
         user.setId(userId);
-        cartService.clearCart(user);
+        cartService.clearCart(userId);
         return "Cart cleared for user successfully";
     }
 
     // Clear cart for session ID
+    @DeleteMapping("/clear/session/{sessionId}")
     public String clearCartBySession(@PathVariable String sessionId) {
         cartService.clearCartBySession(sessionId);
         return "Cart cleared for session successfully";

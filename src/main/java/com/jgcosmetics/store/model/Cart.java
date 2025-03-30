@@ -23,6 +23,9 @@ public class Cart {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
+    @Column(name = "product_name", nullable = false)
+    private String productName;
+
     private int quantity;
     private double price;
 

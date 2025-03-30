@@ -16,6 +16,16 @@ public class UserService {
 
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    public boolean isValid(String username, String password) {
+        Optional<User> userOptional = Optional.ofNullable(userRepo.findByUsername(username));
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // Compare hashed password
+            return encoder.matches(password, user.getPassword());
+        }
+        return false; // User not found or invalid credentials
+    }
+
     // Register new user
     public User registerUser(User user){
         user.setPassword(encoder.encode(user.getPassword()));
@@ -25,6 +35,11 @@ public class UserService {
     // Find user by username
     public Optional<User> findByUsername(String username) {
         return Optional.ofNullable(userRepo.findByUsername(username));
+    }
+
+    // Find user by ID
+    public Optional<User> findById(Integer id) {
+        return userRepo.findById(id);
     }
 
     // Find user by email

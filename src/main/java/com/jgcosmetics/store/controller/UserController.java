@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -26,20 +27,24 @@ public class UserController {
 
     // Login User
     @PostMapping("/login")
-    public String loginUser(@RequestParam String username, @RequestParam String password) {
-        boolean isValid = userService.validateUser(username, password);
-        return isValid? "User logged in successfully" : "Invalid username or password";
+    public String loginUser(@RequestBody Map<String, String> payload) {
+        String username = payload.get("username");
+        String password = payload.get("password");
+
+        // Use isValid to check credentials
+        boolean isValid = userService.isValid(username, password);
+        return isValid ? "User logged in successfully" : "Invalid username or password";
     }
 
     // Get user by username
-    @GetMapping("/{username}")
-    public Optional<User> findByUsername(String username) {
+    @GetMapping("/username/{username}")
+    public Optional<User> findByUsername(@PathVariable String username) {
         return userService.findByUsername(username);
     }
 
     // Get user by email
-    @GetMapping("/{email}")
-    public Optional<User> findByEmail(String email) {
+    @GetMapping("/email/{email}")
+    public Optional<User> findByEmail(@PathVariable String email) {
         return userService.findByEmail(email);
     }
 

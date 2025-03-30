@@ -3,6 +3,8 @@ package com.jgcosmetics.store.controller;
 import com.jgcosmetics.store.model.Product;
 import com.jgcosmetics.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,13 +26,19 @@ public class ProductController {
 
     // Get product by ID
     @GetMapping("/{id}")
-    public Optional<Product> getProductById(int productId) {
-        return productService.getProductById(productId);
+    public ResponseEntity<?> getProductById(@PathVariable Long id) {  // <-- Use Long instead of int
+        Optional<Product> product = productService.getProductById(id);
+
+        if (product.isPresent()) {
+            return ResponseEntity.ok(product.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found with ID: " + id);
+        }
     }
 
     // Get products by category
     @GetMapping("/category/{category}")
-    public List<Product> getProductsByCategory(String category) {
+    public List<Product> getProductsByCategory(@PathVariable String category) {
         return productService.getProductsByCategory(category);
     }
 
@@ -41,8 +49,8 @@ public class ProductController {
     }
 
     // Delete a product by ID
-    @DeleteMapping("{id}")
-    public String deleteProduct(@PathVariable int id) {
+    @DeleteMapping("/delete/{id}")
+    public String deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return "Product with id " + id + " was deleted";
     }

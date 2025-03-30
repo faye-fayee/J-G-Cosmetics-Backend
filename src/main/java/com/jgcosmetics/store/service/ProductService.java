@@ -20,13 +20,16 @@ public class ProductService {
     }
 
     //Get product by ID
-    public Optional<Product> getProductById(int id) {
+    public Optional<Product> getProductById(Long id) {
         return productRepo.findById(id);
     }
 
     //Get all products by category
     public List<Product> getProductsByCategory(String category) {
-        return productRepo.findByCategory(category);
+        System.out.println("Searching for category: " + category);
+        List<Product> products = productRepo.findByCategory(category);
+        System.out.println("Products found: " + products.size());
+        return products;
     }
 
     //Save product
@@ -35,7 +38,7 @@ public class ProductService {
     }
 
     //Delete product by ID
-    public void deleteProduct(int id) {
+    public void deleteProduct(Long id) {
         productRepo.deleteById(id);
     }
 }
