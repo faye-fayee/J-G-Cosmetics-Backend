@@ -25,7 +25,7 @@ public class CartController {
 
     // Get cart items by user
     @GetMapping("/user/{userId}")
-    public List<Cart> getCartByUser (@PathVariable int userId) {
+    public List<Cart> getCartByUser (@PathVariable Long userId) {
         User user = new User();
         user.setId(userId);
         return cartService.getCartByUser(user);
@@ -41,7 +41,7 @@ public class CartController {
     @PostMapping("/add")
     public ResponseEntity<?> addCart(@RequestBody Map<String, Object> payload) {
         try {
-            Integer userId = payload.get("userId") != null ? ((Number) payload.get("userId")).intValue() : null;
+            Long userId = payload.get("userId") != null ? ((Number) payload.get("userId")).longValue() : null;
             Long productId = payload.get("productId") != null ? ((Number) payload.get("productId")).longValue() : null;
             int quantity = payload.get("quantity") != null ? ((Number) payload.get("quantity")).intValue() : 0;
             String sessionId = payload.get("sessionId") != null ? (String) payload.get("sessionId") : null;
@@ -71,7 +71,7 @@ public class CartController {
 
     // Delete item from cart
     @DeleteMapping("/remove/cart-id/{cartId}")
-    public String removeFromCart(@PathVariable int cartId) {
+    public String removeFromCart(@PathVariable Long cartId) {
         cartService.removeFromCart(cartId);
         return "Removed items from cart successfully";
     }
@@ -80,9 +80,9 @@ public class CartController {
     @DeleteMapping("/remove/cart-item")
     public ResponseEntity<?> removeFromCart(@RequestBody Map<String, Object> payload) {
         try {
-            Integer userId = payload.get("userId") != null ? ((Number) payload.get("userId")).intValue() : null;
+            Long userId = payload.get("userId") != null ? ((Number) payload.get("userId")).longValue() : null;
             String sessionId = payload.get("sessionId") != null ? (String) payload.get("sessionId") : null;
-            Integer productId = payload.get("productId") != null ? ((Number) payload.get("productId")).intValue() : null;
+            Long productId = payload.get("productId") != null ? ((Number) payload.get("productId")).longValue() : null;
 
             // Validate required fields
             if (productId == null) {
@@ -92,7 +92,7 @@ public class CartController {
             // Check if userId is provided (logged-in user)
             if (userId != null) {
                 cartService.removeFromCartByUserAndProduct(userId, productId);
-                return ResponseEntity.ok("Item removed from cart successfully for user" + userId);
+                return ResponseEntity.ok("Item removed from cart successfully for user: " + userId);
             }
 
             // Check if sessionId is provided (guest user)
@@ -109,7 +109,7 @@ public class CartController {
 
     // Clear cart for logged-in user
     @DeleteMapping("/clear/user/{userId}")
-    public String clearCartByUser(@PathVariable int userId) {
+    public String clearCartByUser(@PathVariable Long userId) {
         User user = new User();
         user.setId(userId);
         cartService.clearCart(userId);

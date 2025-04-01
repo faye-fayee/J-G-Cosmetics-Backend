@@ -65,26 +65,26 @@ public class CartService {
 
 
     // Remove item from cart by cart ID
-    public void removeFromCart(int cartId){
+    public void removeFromCart(Long cartId){
         cartRepo.deleteById(cartId);
     }
 
     // Remove item from cart by Product ID ( if logged-in )
     @Transactional
-    public void removeFromCartByUserAndProduct(int userId, int productId) {
+    public void removeFromCartByUserAndProduct(Long userId, Long productId) {
         cartRepo.deleteByUserIdAndProductId(userId, productId);
     }
 
     // Remove item from cart by Product ID ( if guest )
     @Transactional
-    public void removeFromCartBySessionAndProduct(String sessionId, int productId) {
+    public void removeFromCartBySessionAndProduct(String sessionId, Long productId) {
         cartRepo.deleteBySessionIdAndProductId(sessionId, productId);
     }
 
 
     // Clear cart for logged-in user after checkout
     @Transactional
-    public void clearCart(int userId){
+    public void clearCart(Long userId){
         cartRepo.deleteByUser(userId);
     }
 

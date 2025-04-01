@@ -14,6 +14,7 @@ public interface CartRepo extends JpaRepository<Cart, Integer> {
     List<Cart> findByUser(User user);
     List<Cart> findBySessionId(String sessionId);
 
+    Cart deleteById(Long cartId);
 
     @Query("SELECT c FROM Cart c WHERE c.user = :user AND c.product = :product AND c.sessionId = :sessionId")
     Cart findByUserAndProductAndSessionId(@Param("user") User user, @Param("product") Product product, @Param("sessionId") String sessionId);
@@ -24,7 +25,7 @@ public interface CartRepo extends JpaRepository<Cart, Integer> {
 
     @Modifying
     @Query("DELETE FROM Cart c WHERE c.user.id = :userId")
-    void deleteByUser(int userId);
+    void deleteByUser(Long userId);
     @Modifying
     @Query("DELETE FROM Cart c WHERE c.sessionId = :sessionId")
     void deleteBySessionId(String sessionId);
@@ -32,10 +33,10 @@ public interface CartRepo extends JpaRepository<Cart, Integer> {
 
     @Modifying
     @Query("DELETE FROM Cart c WHERE c.user.id = :userId AND c.product.id = :productId")
-    void deleteByUserIdAndProductId(@Param("userId") int userId, @Param("productId") int productId);
+    void deleteByUserIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);
     @Modifying
     @Query("DELETE FROM Cart c WHERE c.sessionId = :sessionId AND c.product.id = :productId")
-    void deleteBySessionIdAndProductId(@Param("sessionId") String sessionId, @Param("productId") int productId);
+    void deleteBySessionIdAndProductId(@Param("sessionId") String sessionId, @Param("productId") Long productId);
 
 
 }
