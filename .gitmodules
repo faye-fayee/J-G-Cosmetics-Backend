@@ -1,0 +1,3 @@
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/faye-fayee/J-G-Cosmetics-Frontend.git
