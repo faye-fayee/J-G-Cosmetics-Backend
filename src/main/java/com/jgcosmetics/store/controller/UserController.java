@@ -22,9 +22,11 @@ public class UserController {
 
     // Register user
     @PostMapping("/register")
-    public String registerUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody User user) {
         userService.registerUser(user);
-        return "User registered successfully";
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "User registered successfully");
+        return ResponseEntity.ok(response);
     }
 
     // Login User
