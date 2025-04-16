@@ -5,9 +5,11 @@ import com.jgcosmetics.store.model.User;
 import com.jgcosmetics.store.repository.UserRepo;
 import com.jgcosmetics.store.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/account/addresses/")
@@ -24,9 +26,15 @@ public class AddressController {
 
     // Get all addresses
     @GetMapping("/{id}")
-    public List<Address> getAllAddresses(@PathVariable Long id) {
-        User user = userRepo.findById(id).orElseThrow();
-        return addressService.getAddressesByUser(user);
+    public ResponseEntity<List<Address>> getAllAddresses(@PathVariable Long id) {
+        Optional<User> userOptional = userRepo.findById(id);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userOptional.get();
+        List<Address> addresses = addressService.getAddressesByUser(user);
+        return ResponseEntity.ok(addresses);
     }
 
     // Add a new address

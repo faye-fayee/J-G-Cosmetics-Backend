@@ -1,6 +1,7 @@
 package com.jgcosmetics.store.controller;
 
 import com.jgcosmetics.store.model.User;
+import com.jgcosmetics.store.repository.UserRepo;
 import com.jgcosmetics.store.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +20,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepo userRepo;
 
     // Register user
     @PostMapping("/register")
@@ -35,19 +38,35 @@ public class UserController {
         String username = payload.get("username");
         String password = payload.get("password");
 
-        // Use isValid to check credentials
         boolean isValid = userService.isValid(username, password);
-
         Map<String, Object> response = new HashMap<>();
+
         if (isValid) {
-            response.put("success", true);
-            response.put("message", "User logged in successfully");
+            Optional<User> optionalUser = userService.findByUsername(username);
+
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+
+                Map<String, Object> userData = new HashMap<>();
+                userData.put("id", user.getId());
+                userData.put("name", user.getName());
+                userData.put("username", user.getUsername());
+
+                response.put("success", true);
+                response.put("message", "User logged in successfully");
+                response.put("user", userData);
+            } else {
+                response.put("success", false);
+                response.put("message", "User not found");
+            }
         } else {
             response.put("success", false);
             response.put("message", "Invalid username or password");
         }
+
         return ResponseEntity.ok(response);
     }
+
 
     // Get user by username
     @GetMapping("/username/{username}")
