@@ -47,4 +47,17 @@ public class UserService {
         Optional<User> user = userRepo.findByUsername(username);
         return user.isPresent() && encoder.matches(rawPassword, user.get().getPassword());
     }
+
+    // Reset user password
+    public boolean resetPassword(String username, String newPassword) {
+        Optional<User> optionalUser = userRepo.findByUsername(username);
+
+        if(optionalUser.isPresent()){
+            User user = optionalUser.get();
+            user.setPassword(encoder.encode(newPassword));
+            userRepo.save(user);
+            return true;
+        }
+        return false;
+    }
 }

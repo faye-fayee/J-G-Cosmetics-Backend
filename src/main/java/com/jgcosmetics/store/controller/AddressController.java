@@ -46,7 +46,6 @@ public class AddressController {
 
     @PutMapping("/{id}")
     public Address updateAddress(@PathVariable Long id, @RequestBody Address updatedAddress) {
-//        User user = userRepo.findById(id).orElseThrow();
         return addressService.updateAddress(id, updatedAddress);
     }
 
