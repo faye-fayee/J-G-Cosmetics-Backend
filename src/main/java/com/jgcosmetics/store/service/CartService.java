@@ -30,26 +30,25 @@ public class CartService {
     }
 
     // Add items to cart for logged in users or guest
-    public Cart addToCart(User user, Long productId, int quantity, String sessionId) {
+    public Cart addToCart(User user, Long productId, int quantity, String sessionId, String shade) {
         Product product = productRepo.findById(productId).orElse(null);
         if (product == null) {
             throw new RuntimeException("Product not found");
         }
 
         Cart existingCart;
+
         if (user != null) {
-            existingCart = cartRepo.findByUserAndProductAndSessionId(user, product, sessionId);
+            existingCart = cartRepo.findByUserAndProductAndShade(user, product, shade);
         } else {
-            existingCart = cartRepo.findByProductAndSessionId(product, sessionId); // For guest users
+            existingCart = cartRepo.findByProductAndSessionIdAndShade(product, sessionId, shade); // For guest users
         }
 
         if (existingCart != null) {
-            // Product already in cart, update the quantity and total price
             existingCart.setQuantity(existingCart.getQuantity() + quantity);
             existingCart.setTotalPrice(existingCart.getPrice() * existingCart.getQuantity());
-            return cartRepo.save(existingCart); // Update cart item
+            return cartRepo.save(existingCart);
         } else {
-            // Create a new cart item if product does not exist in cart
             Cart cart = new Cart();
             cart.setUser(user);
             cart.setProduct(product);
@@ -58,9 +57,20 @@ public class CartService {
             cart.setPrice(product.getPrice());
             cart.setTotalPrice(product.getPrice() * quantity);
             cart.setSessionId(sessionId);
+            cart.setShade(shade); // 💡 Add shade
 
-            return cartRepo.save(cart); // Save new cart item
+            return cartRepo.save(cart);
         }
+    }
+
+    @Transactional
+    public void removeFromCartByUserProductAndShade(Long userId, Long productId, String shade) {
+        cartRepo.deleteByUserIdAndProductIdAndShade(userId, productId, shade);
+    }
+
+    @Transactional
+    public void removeFromCartBySessionProductAndShade(String sessionId, Long productId, String shade) {
+        cartRepo.deleteBySessionIdAndProductIdAndShade(sessionId, productId, shade);
     }
 
 

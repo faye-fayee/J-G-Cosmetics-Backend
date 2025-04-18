@@ -1,7 +1,6 @@
 package com.jgcosmetics.store.controller;
 
 import com.jgcosmetics.store.model.Cart;
-import com.jgcosmetics.store.model.Product;
 import com.jgcosmetics.store.model.User;
 import com.jgcosmetics.store.service.CartService;
 import com.jgcosmetics.store.service.UserService;
@@ -45,10 +44,11 @@ public class CartController {
             Long productId = payload.get("productId") != null ? ((Number) payload.get("productId")).longValue() : null;
             int quantity = payload.get("quantity") != null ? ((Number) payload.get("quantity")).intValue() : 0;
             String sessionId = payload.get("sessionId") != null ? (String) payload.get("sessionId") : null;
+            String shade = payload.get("shade") != null ? (String) payload.get("shade") : null;
 
             // Validate required fields
-            if (productId == null || quantity <= 0 || sessionId == null) {
-                return ResponseEntity.badRequest().body("Error: Invalid data provided");
+            if (productId == null || quantity <= 0 || sessionId == null || shade == null || shade.isBlank()) {
+                return ResponseEntity.badRequest().body("Error: Invalid data provided. Product, quantity, session ID, and shade are required.");
             }
 
             // Find user if userId is provided
@@ -61,13 +61,46 @@ public class CartController {
             }
 
             // Add or update cart
-            cartService.addToCart(user, productId, quantity, sessionId);
+            cartService.addToCart(user, productId, quantity, sessionId, shade);
             return ResponseEntity.ok("Added to cart successfully");
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error adding item to cart: " + e.getMessage());
         }
     }
+
+    // Sync cart from frontend
+    @PostMapping("/sync")
+    public ResponseEntity<?> syncCart(@RequestBody List<Map<String, Object>> cartItems) {
+        try {
+            for (Map<String, Object> item : cartItems) {
+                Long productId = item.get("productId") != null ? ((Number) item.get("productId")).longValue() : null;
+                int quantity = item.get("quantity") != null ? ((Number) item.get("quantity")).intValue() : 0;
+                String sessionId = item.get("sessionId") != null ? (String) item.get("sessionId") : null;
+                Long userId = item.get("userId") != null ? ((Number) item.get("userId")).longValue() : null;
+                String shade = item.get("shade") != null ? (String) item.get("shade") : null;
+
+                // Validate essential fields
+                if (productId == null || quantity <= 0 || sessionId == null || shade == null || shade.isBlank()) {
+                    continue; // Skip invalid items
+                }
+
+                User user = null;
+                if (userId != null) {
+                    user = userService.findById(userId).orElse(null);
+                }
+
+                cartService.addToCart(user, productId, quantity, sessionId, shade);
+            }
+
+            return ResponseEntity.ok("Cart synced successfully");
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error syncing cart: " + e.getMessage());
+        }
+    }
+
 
     // Delete item from cart
     @DeleteMapping("/remove/cart-id/{cartId}")
