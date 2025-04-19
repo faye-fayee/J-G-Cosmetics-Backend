@@ -41,14 +41,15 @@ public class CartService {
         if (user != null) {
             existingCart = cartRepo.findByUserAndProductAndShade(user, product, shade);
         } else {
-            existingCart = cartRepo.findByProductAndSessionIdAndShade(product, sessionId, shade); // For guest users
+            existingCart = cartRepo.findByProductAndSessionIdAndShade(product, sessionId, shade);
         }
 
         if (existingCart != null) {
-            existingCart.setQuantity(existingCart.getQuantity() + quantity);
-            existingCart.setTotalPrice(existingCart.getPrice() * existingCart.getQuantity());
+            existingCart.setQuantity(quantity);
+            existingCart.setTotalPrice(existingCart.getPrice() * quantity);
             return cartRepo.save(existingCart);
         } else {
+            // New item
             Cart cart = new Cart();
             cart.setUser(user);
             cart.setProduct(product);
@@ -57,11 +58,11 @@ public class CartService {
             cart.setPrice(product.getPrice());
             cart.setTotalPrice(product.getPrice() * quantity);
             cart.setSessionId(sessionId);
-            cart.setShade(shade); // 💡 Add shade
-
+            cart.setShade(shade);
             return cartRepo.save(cart);
         }
     }
+
 
     @Transactional
     public void removeFromCartByUserProductAndShade(Long userId, Long productId, String shade) {

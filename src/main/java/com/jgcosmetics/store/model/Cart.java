@@ -26,7 +26,7 @@ public class Cart {
     @Column(name = "product_name", nullable = false)
     private String productName;
 
-    @Column(name = "shade", nullable = false)
+    @Column(name = "shade", nullable = true)
     private String shade;
 
     private int quantity;
