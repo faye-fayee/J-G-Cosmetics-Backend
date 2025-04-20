@@ -28,10 +28,15 @@ public class UserController {
     // Register user
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerUser(@Valid @RequestBody User user) {
-        userService.registerUser(user);
         Map<String, String> response = new HashMap<>();
-        response.put("message", "User registered successfully");
-        return ResponseEntity.ok(response);
+        try {
+            userService.registerUser(user);
+            response.put("message", "User registered successfully");
+            return ResponseEntity.ok(response);
+        } catch (RuntimeException e) {
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
     }
 
     // Login User
