@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AddressService {
@@ -20,6 +21,14 @@ public class AddressService {
     //Get Address List by User
     public List<Address> getAddressesByUser(User user) {
         return addressRepo.findByUser(user);
+    }
+
+    // Get Address By UserId and Label
+    public Address getAddressByUserAndLabel(Long userId, String label) {
+        User user = userRepo.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return addressRepo.findByUserAndLabel(user, label)
+                .orElseThrow(() -> new RuntimeException("Address not found"));
     }
 
     // Add an Address by User

@@ -37,6 +37,12 @@ public class AddressController {
         return ResponseEntity.ok(addresses);
     }
 
+    // Get an Address by the UserId and Label
+    @GetMapping("/{userId}/{label}")
+    public Address getAddressByLabel(@PathVariable Long userId, @PathVariable String label) {
+        return addressService.getAddressByUserAndLabel(userId, label);
+    }
+
     // Add a new address
     @PostMapping("/{id}")
     public Address addAddress(@RequestBody Address address, @PathVariable Long id) {
