@@ -40,6 +40,8 @@ public class AddressService {
 
     // Update address by user
     public Address updateAddress(Long id, Address updatedAddress) {
+
+        System.out.println("Phone before update: " + updatedAddress.getPhone());
         Address address = addressRepo.findById(id).orElseThrow();
 
         address.setLabel(updatedAddress.getLabel());

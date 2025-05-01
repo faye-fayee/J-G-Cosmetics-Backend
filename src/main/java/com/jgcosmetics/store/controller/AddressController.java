@@ -5,10 +5,13 @@ import com.jgcosmetics.store.model.User;
 import com.jgcosmetics.store.repository.UserRepo;
 import com.jgcosmetics.store.service.AddressService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -51,8 +54,25 @@ public class AddressController {
     }
 
     @PutMapping("/{id}")
-    public Address updateAddress(@PathVariable Long id, @RequestBody Address updatedAddress) {
-        return addressService.updateAddress(id, updatedAddress);
+    public ResponseEntity<Map<String, Object>> updateAddress(
+            @PathVariable Long id,
+            @RequestBody Address updatedAddress) {
+
+        Address updated = addressService.updateAddress(id, updatedAddress);
+
+        if (updated == null) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Address update failed.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        }
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Address updated successfully.");
+        response.put("address", updated);
+
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
