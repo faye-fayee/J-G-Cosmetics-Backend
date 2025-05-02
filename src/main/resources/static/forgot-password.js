@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         // If all validations pass, send the request
-        fetch("http://localhost:8080/api/users/reset-password", {
+        fetch("http://34.105.57.169:8080/api/users/reset-password", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

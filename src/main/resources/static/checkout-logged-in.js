@@ -5,7 +5,7 @@ if (localStorage.getItem("userId")) {
         let formWasUpdated = false;
 
         // Fetch user info from the backend
-        fetch(`http://localhost:8080/api/users/${userId}/info`)
+        fetch(`http://34.105.57.169:8080/api/users/${userId}/info`)
             .then(res => res.json())
             .then(data => {
 
@@ -96,7 +96,7 @@ if (localStorage.getItem("userId")) {
             };
             
 
-            fetch(`http://localhost:8080/api/account/addresses/${selectedAddressId}`, { // Use selectedAddressId here
+            fetch(`http://34.105.57.169:8080/api/account/addresses/${selectedAddressId}`, { // Use selectedAddressId here
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -219,7 +219,7 @@ if (localStorage.getItem("userId")) {
                 cartItems: cart 
             };
         
-            fetch("http://localhost:8080/api/checkout/placeOrder", {
+            fetch("http://34.105.57.169:8080/api/checkout/placeOrder", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

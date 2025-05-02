@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-    fetch(`http://localhost:8080/api/account/addresses/${userId}/${addressLabel}`)
+    fetch(`http://34.105.57.169:8080/api/account/addresses/${userId}/${addressLabel}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //     return;
         // }
 
-        fetch(`http://localhost:8080/api/account/addresses/${currentAddressId}`, {
+        fetch(`http://34.105.57.169:8080/api/account/addresses/${currentAddressId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

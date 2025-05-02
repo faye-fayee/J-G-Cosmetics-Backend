@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        fetch(`http://localhost:8080/api/account/addresses/${userId}`, {
+        fetch(`http://34.105.57.169:8080/api/account/addresses/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

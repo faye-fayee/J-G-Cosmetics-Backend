@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = "add-address.html";
     });
 
-    fetch (`http://localhost:8080/api/account/addresses/${userId}`)
+    fetch (`http://34.105.57.169:8080/api/account/addresses/${userId}`)
         .then (response => response.json())
         .then (addresses => {
             if (addresses.length === 0) {
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     const confirmDelete = confirm("Are you sure you want to delete this address?");
                     if(confirmDelete) {
-                        fetch(`http://localhost:8080/api/account/addresses/${id}`, {
+                        fetch(`http://34.105.57.169:8080/api/account/addresses/${id}`, {
                             method: 'DELETE'
                         })
                         .then(response => {
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
 
         // Fetch order history
-        fetch(`http://localhost:8080/api/checkout/history/${userId}`)
+        fetch(`http://34.105.57.169:8080/api/checkout/history/${userId}`)
         .then(res => res.json())
         .then(orders => renderOrderHistory(orders))
         .catch(err => {

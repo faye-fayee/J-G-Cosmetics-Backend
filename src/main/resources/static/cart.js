@@ -120,7 +120,7 @@ function removeItemFromCartBackend(item) {
         productId: item.id
     };
 
-    fetch('http://localhost:8080/api/cart/remove/cart-item', {
+    fetch('http://34.105.57.169:8080/api/cart/remove/cart-item', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -208,7 +208,7 @@ function syncCartWithBackend(cart) {
 
     console.log("Transformed cart:", transformedCart);
 
-    fetch('http://localhost:8080/api/cart/sync', {
+    fetch('http://34.105.57.169:8080/api/cart/sync', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(transformedCart)
@@ -223,8 +223,8 @@ function fetchCartFromBackend() {
     const sessionId = getSessionId();   // always exists
 
     const url = userId 
-        ? `http://localhost:8080/api/cart/user/${userId}`
-        : `http://localhost:8080/api/cart/session/${sessionId}`;
+        ? `http://34.105.57.169:8080/api/cart/user/${userId}`
+        : `http://34.105.57.169:8080/api/cart/session/${sessionId}`;
 
     fetch(url)
         .then(response => response.json())

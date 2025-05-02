@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     try {
         // Fetch product data from backend
-        const response = await fetch(`http://localhost:8080/api/products/${productId}`);
+        const response = await fetch(`http://34.105.57.169:8080/api/products/${productId}`);
         const product = await response.json();
 
         product.images = typeof product.images === "string" ? JSON.parse(product.images) : product.images;

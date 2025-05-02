@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
             // Log the request data to the console
             console.log("Request data:", requestData);
 
-            fetch("http://localhost:8080/api/checkout/placeOrder", {
+            fetch("http://34.105.57.169:8080/api/checkout/placeOrder", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
