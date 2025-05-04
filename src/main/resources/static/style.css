@@ -1184,51 +1184,6 @@ footer {
     background-color: rgb(222, 161, 161);
 }
 
-.product-reviews {
-    display: none;
-    margin: 0vh 30vh; 
-    /* border: 1px solid #202020; */
-}
-
-.product-reviews h1 {
-    padding: 2vh;
-    text-align: center;
-    border: 1px solid #202020;
-
-}
-
-.add-review-btn {
-    display: block;
-    /* margin: auto; */
-    font-weight: 400;
-    color: rgb(255, 255, 255);
-    background-color: rgb(228, 183, 183);
-    border: none;
-    font-size: 2vh;
-    cursor: pointer;
-    padding: 1vh 1vh;
-    width: 20%;
-}
-
-.add-review-btn:hover {
-    background-color: rgb(222, 161, 161);
-    text-decoration: underline;
-}
-
-.review-card {
-    display: block;
-    padding: 3vh 10vh;
-}
-
-.review-card h3 {
-    margin: 0vh;
-}
-
-.review-card p {
-    margin: 0vh;
-    padding-bottom: 2vh;
-}
-
 .checkout-container {
     padding-bottom: 3vh;
 }
