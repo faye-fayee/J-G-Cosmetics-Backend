@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
             form.addressCountry.value = address.country;
 
             if (window.location.pathname.includes("edit-address.html")) {
-                document.querySelector('title').textContent = "Edit " + address.label + "address - J&G Cosmetics";
+                document.querySelector('title').textContent = "Edit " + address.label + " address - J&G Cosmetics";
             }
         })
         .catch(error =>{

@@ -19,14 +19,20 @@ public class Address {
     private Long id;
 
     private String label;
+
     @Column(name = "full_name")
     private String fullName;
+
     private String phone;
+
     @Column(name = "address_line")
     private String addressLine;
+
     private String city;
+
     @Column(name = "postal_code")
     private String postalCode;
+
     private String country;
 
     @ManyToOne

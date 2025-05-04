@@ -16,10 +16,8 @@ public class OrderService {
     UserRepo userRepo;
     @Autowired
     private AddressRepo addressRepo;
-
     @Autowired
     private OrderRepo orderRepo;
-
     @Autowired
     private OrderItemRepo orderItemRepo;
     @Autowired

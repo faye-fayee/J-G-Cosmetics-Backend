@@ -13,7 +13,6 @@ public class UserService {
 
     @Autowired
     private UserRepo userRepo;
-
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public boolean isValid(String username, String password) {
