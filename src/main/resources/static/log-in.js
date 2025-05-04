@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 localStorage.setItem("name", data.user.name);
                 localStorage.setItem("username", data.user.username);
 
+                clearCart();
                 fetchCartFromBackend();
 
                 alert('Login successful!');

@@ -164,9 +164,11 @@ function updateQuantity(index, change) {
 
 // Add to Cart Functionality
 function addToCart(product, selectedShade, quantity) {
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const normalizedShade = selectedShade ?? null;
-    const existingItemIndex = cart.findIndex((item) => item.id === product.id && item.shade === normalizedShade);
+    let cart = JSON.parse(localStorage.getItem("cart")) || []
+
+    const normalizedShade = selectedShade || "";
+    const existingItemIndex = cart.findIndex((item) =>
+        item.id === product.id && (item.shade || "") === normalizedShade);
 
 
     if (existingItemIndex !== -1) {
@@ -176,6 +178,7 @@ function addToCart(product, selectedShade, quantity) {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
+    alert(product.name + " has been added to your cart!");
     syncCartWithBackend(cart);
     updateCartCounter(document.querySelector(".cart-counter"));
     renderCartItems();
@@ -186,7 +189,7 @@ function createCartItem(product, selectedShade, quantity) {
     return {
         id: product.id,
         name: product.name,
-        shade: selectedShade ?? null,
+        shade: selectedShade || "",
         price: product.price,
         quantity: quantity,
         image: product.images[0]
