@@ -37,6 +37,11 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         
         if (product) {
+
+            if (window.location.pathname.includes("prod-details.html")) {
+                document.querySelector('title').textContent = product.name + " - J&G Cosmetics";
+            }
+
             // Set title and description
             document.querySelector(".product-title").innerText = product.name;
             document.querySelector(".product-price").innerText = `₱${product.price}`;
@@ -93,7 +98,9 @@ document.addEventListener("DOMContentLoaded", async function () {
             } else {
                 shadeContainer.innerHTML = "";
                 shadeContainer.style.display = "none";
-            }   
+            }
+
+
 
             //  Add to Cart Button
             const addToCartBtn = document.querySelector(".add-to-cart-btn");

@@ -30,6 +30,10 @@ document.addEventListener("DOMContentLoaded", () => {
             form.addressCity.value = address.city;
             form.postalCode.value = address.postalCode;
             form.addressCountry.value = address.country;
+
+            if (window.location.pathname.includes("edit-address.html")) {
+                document.querySelector('title').textContent = "Edit " + address.label + "address - J&G Cosmetics";
+            }
         })
         .catch(error =>{
             console.error("Error fetching address:", error);
