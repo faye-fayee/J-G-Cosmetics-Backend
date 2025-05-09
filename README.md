@@ -35,7 +35,7 @@ src/
 
 1. **Clone the repo**:
    ```bash
-   git clone https://github.com/your-username/your-repo-name.git
+   git clone https://github.com/faye-fayee/J-G-Cosmetics-Backend.git
    cd your-repo-name
    ```
 2. **Setup the Database**:
