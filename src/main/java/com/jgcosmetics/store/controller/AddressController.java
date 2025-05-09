@@ -53,6 +53,8 @@ public class AddressController {
         return addressService.addAddress(user, address);
     }
 
+
+    // Update address
     @PutMapping("/{id}")
     public ResponseEntity<Map<String, Object>> updateAddress(
             @PathVariable Long id,
@@ -75,6 +77,7 @@ public class AddressController {
         return ResponseEntity.ok(response);
     }
 
+    // Delete an address
     @DeleteMapping("/{id}")
     public void deleteAddress(@PathVariable Long id) {
         addressService.deleteAddress(id);
