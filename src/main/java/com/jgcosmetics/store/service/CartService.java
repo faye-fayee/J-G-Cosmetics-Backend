@@ -7,7 +7,7 @@ import com.jgcosmetics.store.model.Product;
 import com.jgcosmetics.store.model.User;
 import com.jgcosmetics.store.repository.CartRepo;
 import com.jgcosmetics.store.repository.ProductRepo;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -117,21 +117,31 @@ public class CartService {
         Long userId = request.getUserId();
         String sessionId = request.getSessionId();
         Long productId = request.getProductId();
+        String shade = request.getShade();
 
         if (productId == null) {
             throw new IllegalArgumentException("Error: productId is required.");
         }
 
+        // Handle deletion based on userId, sessionId, and productId
         if (userId != null) {
-            removeFromCartByUserAndProduct(userId, productId);
+            if (shade != null) {
+                removeFromCartByUserProductAndShade(userId, productId, shade);  // Remove by user, product, and shade
+            } else {
+                removeFromCartByUserAndProduct(userId, productId);  // Remove by user and product only (no shade)
+            }
         } else if (sessionId != null) {
-            removeFromCartBySessionAndProduct(sessionId, productId);
+            if (shade != null) {
+                removeFromCartBySessionProductAndShade(sessionId, productId, shade);  // Remove by session, product, and shade
+            } else {
+                removeFromCartBySessionAndProduct(sessionId, productId);  // Remove by session and product only (no shade)
+            }
         } else {
             throw new IllegalArgumentException("Error: Either userId or sessionId is required.");
         }
     }
 
-
+    // HELPER METHODS FOR DELETE ITEM METHOD
     @Transactional
     public void removeFromCartByUserProductAndShade(Long userId, Long productId, String shade) {
         cartRepo.deleteByUserIdAndProductIdAndShade(userId, productId, shade);
@@ -140,6 +150,16 @@ public class CartService {
     @Transactional
     public void removeFromCartBySessionProductAndShade(String sessionId, Long productId, String shade) {
         cartRepo.deleteBySessionIdAndProductIdAndShade(sessionId, productId, shade);
+    }
+
+    @Transactional
+    public void removeFromCartByUserAndProduct(Long userId, Long productId) {
+        cartRepo.deleteByUserIdAndProductId(userId, productId);
+    }
+
+    @Transactional
+    public void removeFromCartBySessionAndProduct(String sessionId, Long productId) {
+        cartRepo.deleteBySessionIdAndProductId(sessionId, productId);
     }
 
     // Remove item from cart by cart ID
@@ -157,18 +177,6 @@ public class CartService {
     @Transactional
     public void clearCartBySession(String sessionId) {
         cartRepo.deleteBySessionId(sessionId);
-    }
-
-    // Remove item from cart by Product ID (logged-in user)
-    @Transactional
-    public void removeFromCartByUserAndProduct(Long userId, Long productId) {
-        cartRepo.deleteByUserIdAndProductId(userId, productId);
-    }
-
-    // Remove item from cart by Product ID (guest)
-    @Transactional
-    public void removeFromCartBySessionAndProduct(String sessionId, Long productId) {
-        cartRepo.deleteBySessionIdAndProductId(sessionId, productId);
     }
 }
 

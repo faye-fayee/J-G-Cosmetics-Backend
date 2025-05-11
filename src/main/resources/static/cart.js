@@ -112,21 +112,24 @@ function debouncedSync(cart) {
     syncTimeout = setTimeout(() => syncCartWithBackend(cart), 300);
 }
 
+
 // Remove Item from Cart Backend
 function removeItemFromCartBackend(item) {
     const payload = {
         userId: getLoggedInUserId(),
         sessionId: getSessionId(),
-        productId: item.id
+        productId: item.id,
+        shade: item.shade
     };
+    const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:8080/api' : 'http://34.105.57.169:8080/api';
 
-    fetch('http://34.105.57.169:8080/api/cart/remove/cart-item', {
+    fetch(`${API_URL}/cart/remove/cart-item`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
     })
-    .then(handleResponse)
-    .catch(handleError);
+        .then(handleResponse)
+        .catch(handleError);
 }
 
 // Handle Response from Backend
